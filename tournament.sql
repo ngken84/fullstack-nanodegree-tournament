@@ -29,3 +29,10 @@ create table games (
 	round integer,
 	winner integer references players(id)
 );
+
+create view match_count_view as 
+select pt.id, pt.name, count(pt.id) and match_count
+from players pt
+left join games gt on gt.player_one = pt.id or gt.player_two = pt.id
+group by pt.id;
+
