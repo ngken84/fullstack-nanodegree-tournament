@@ -31,7 +31,7 @@ create table games (
 );
 
 create view match_count_view as 
-select pt.id, pt.name, count(pt.id) and match_count
+select pt.id, pt.name, count(pt.id) as match_count
 from players pt
 left join games gt on gt.player_one = pt.id or gt.player_two = pt.id
 group by pt.id;

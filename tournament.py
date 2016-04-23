@@ -72,7 +72,17 @@ def playerStandings():
     """
     conn = cursor()
     cursor = conn.cursor();
-    
+    cursor.execute("SELECT pt.id, pt.name, count(gt.winner) as wins, "
+                   "mcv.count as matches "
+                   "from games gt "
+                   "right join players pt on pt.id = gt.winner "
+                   "inner join match_count_view mcv on mcv.id = pt.id "
+                   "group by gt.winner, pt.id, mcv.count"
+                   "order by wins desc ")
+    retval = cursor.fetchall()
+    conn.close()
+    return retval
+                   
 
 
 def reportMatch(winner, loser):
