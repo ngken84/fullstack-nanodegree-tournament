@@ -31,8 +31,16 @@ create table games (
 );
 
 create view match_count_view as 
-select pt.id, pt.name, count(pt.id) as match_count
-from players pt
-left join games gt on gt.player_one = pt.id or gt.player_two = pt.id
-group by pt.id;
+select p2.id, p2.name, count(pt.id) as match_count
+from games g1 full join games g2 on 0 = 1
+inner join players pt on
+(pt.id = g1.player_one or pt.id = g2.player_two)
+right join players p2 on p2.id = pt.id
+group by pt.id, p2.id;
 
+
+create view win_count_view as 
+select p2.id, p2.name, count(p1.id) as wins from games gt 
+inner join players p1 on gt.winner = p1.id 
+right join players p2 on p2.id = p1.id 
+group by p1.id, p2.id;
