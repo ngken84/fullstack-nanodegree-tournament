@@ -43,4 +43,17 @@ create view win_count_view as
 select p2.id, p2.name, count(p1.id) as wins from games gt 
 inner join players p1 on gt.winner = p1.id 
 right join players p2 on p2.id = p1.id 
-group by p1.id, p2.id;
+group by p1.id, p2.id
+order by wins desc;
+
+create view potential_match_count_view as 
+select wc1.id, count(wc1.id) as pot_match_count from win_count_view wc1
+inner join win_count_view wc2 on wc1.id != wc2.id
+left join games gt on
+((wc1.id = gt.player_one and wc2.id = gt.player_two) or
+(wc2.id = gt.player_one and wc1.id = player_two))
+where gt.winner isnull and 
+wc1.wins >= wc2.wins and
+not (wc1.wins = wc2.wins and wc1.id > wc2.id)
+group by wc1.id, wc1.name 
+order by pot_match_count;
