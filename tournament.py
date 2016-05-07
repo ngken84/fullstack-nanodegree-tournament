@@ -113,5 +113,22 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    conn = connect();
+    cursor = conn.cursor();
+    cursor.execute("SELECT * FROM win_count_view")
+    id1 = 0
+    name1 = None
+    retval = []
+    for row in cursor:
+        # First player is not defined so define the first player
+        if(name1 is None):
+            name1 = row[1]
+            id1 = row[0]
+        # First player is defined to add a tuple to the final list. 
+        else:
+            retval.append((id1, name1, row[0], row[1]))
+            print(retval)
+            name1 = None
+    return retval
 
 
